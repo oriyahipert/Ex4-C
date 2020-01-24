@@ -18,11 +18,11 @@ typedef struct node
 char* check_letter(char* words);
 node* create_node(char *letter);
 node* create_head();
-void print_words(node** root, char word[], int temp);
-void print_words_R(node** root, char word[], int temp);
-void insert(node **head, char* str);
+void print_words(node* root, char word[], int temp);
+void print_words_R(node* root, char word[], int temp);
+void insert(node *head, char* str);
 int getword(char w[]);
 int haveChildren(node* curr);
 int deletion(node **curr, char* str);
 int search(node* head, char* str);
-void freeTree (node** head);
+void freeTree (node* head);

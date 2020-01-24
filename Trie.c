@@ -8,13 +8,13 @@
 char* check_letter(char* words) // convert upper case to lower case
 {
     int i = 0;
-    char    *str = strdup(words);
+    char *str = strdup(words);
 
     while (str[i])
     {
 		 if(str[i] < 65 || str[i] > 123) //delet if 
             { 
-				memmove(&str[i], &str[i + 1], strlen(str) - i);
+				memmove(str[i], &str[i + 1], strlen(str) - i);
             }
 
         if (str[i] >= 65 && str[i] <= 90)
@@ -43,6 +43,7 @@ node* create_node(char *letter) // make new node
 
 node* create_head()
 {
+
     node* n = (node*)malloc(sizeof(node));
     n->count = 0;
     n->end_word = 0;
@@ -54,97 +55,83 @@ node* create_head()
 }
 
 
-void insert(node **head, char* str) //insert new node to trie
+void insert(node *head, char* str) //insert new node to trie
 {
+            printf("in\n");
+
 	// start from root node
-    node* curr = *head;
+//    node* curr = *head;
 	char* copy =check_letter(str);
 	while (*copy)
 	{
 		// create a new node if path doesn't exists
-		if (curr->children[*copy - 'a'] == NULL)
-			curr->children[*copy - 'a'] = create_node(str);
+		if (head->children[*copy - 'a'] == NULL)
+			head->children[*copy - 'a'] = create_node(str);
 
 		// go to next node
-		curr = curr->children[*copy - 'a'];
+		head = head->children[*copy - 'a'];
 
 		// move to next character
 		copy++;
 	}
 
-	curr->end_word = true;
-    curr->count++;
+	head->end_word = true;
+    head->count++;
 }
 
-int getword(char w[]){
-    int j = 0;
-    char ch = getchar();
-    //w[0]=ch;
-    while(ch != ' ' && ch != '\t' && ch != '\n' && ch != EOF){
-        w[j] = ch;
-        j++;
-        ch = getchar();
-    }
-    w[j] = '\0';
-    if(ch == EOF){
-        return -1;
-    }else{
-        return j;
-    }
-}
-
-void print_words(node** root, char word[], int temp) //print trie
+void print_words(node* root, char word[], int temp) //print trie
 {
- node* head = *root;
+            printf("print\n");
+
+ //node* head = *root;
    if(root == NULL)
       return;
    
-   if(head->end_word == true)
+   if(root->end_word == true)
    {
         word[temp]='\0';
-        printf("%s \t %d \n",word,head->count);
+        printf("%s \t %d \n",word,root->count);
    }
    for(int i=0; i<NUM_LETTERS; i++)
    {
-      if(head->children[i] != NULL)
+      if(root->children[i] != NULL)
       {
          word[temp] = i+'a';
-         print_words(&(head->children[i]), word, temp+1);
+         print_words((root->children[i]), word, temp+1);
       }
    }
 }
 
-void print_words_R(node** root, char word[], int temp) //print trie in revers 
+void print_words_R(node* root, char word[], int temp) //print trie in revers 
 {
- node* head = *root;
+          printf("printR\n");
+ //node* head = *root;
    if(root == NULL)
       return;
    
-   if(head->end_word == true)
+   if(root->end_word == true)
    {
         word[temp]='\0';
-        printf("%s \t %d \n",word,head->count);
+        printf("%s \t %d \n",word,root->count);
    }
    for(int i=NUM_LETTERS-1 ; i>= 0; i--)
    {
-      if(head->children[i] != NULL)
+      if(root->children[i] != NULL)
       {
          word[temp] = i+'a';
-         print_words(&(head->children[i]), word, temp+1);
+         print_words((root->children[i]), word, temp+1);
       }
    }
 }
 
-void freeTree (node** head){
-	node* temp= *head;
-	for(int i=0; i<NUM_LETTERS; i++){
-		if(temp->children == NULL){
-			free(temp);
-		}
-		else{
-			freeTree((&temp->children[i]));
-		}
-	}
-	free(temp);
+void freeTree (node* head){
+     for (int i = 0; i < NUM_LETTERS; i++ ){
+        if(head -> children[i] != NULL){
+            freeTree(head -> children[i]);
+        }
+    }
+    if (head != NULL){
+        free(head);
+    }
 }
 
